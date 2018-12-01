@@ -62,11 +62,21 @@ class MessageManager private constructor(){
                 Log.e(TAG, "register -> there is no parentkey($parentKey) registered!")
                 return
             }
-            val parentNode = nodeMap[parentKey]
+            val parentNode = nodeMap[parentKey]!!
+            removeChildNode(key, parentNode)
             node.parentNode = parentNode
-            parentNode?.childList?.add(node)
+            parentNode.childList.add(node)
         }
         nodeMap[key] = node
+    }
+
+    private fun removeChildNode(childKey: String, parentNode: Node) {
+        for (childNode in parentNode.childList) {
+            if (TextUtils.equals(childNode.key, childKey)) {
+                parentNode.childList.remove(childNode)
+                break
+            }
+        }
     }
 
     private fun unregister(key: String) {
